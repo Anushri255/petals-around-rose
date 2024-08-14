@@ -1,26 +1,38 @@
-import dice
 import random
 
-
-
+# Initialize variables
 validInput = "no"           # Is set to "no" until the user enters either 'y' or 'n'.                                        
-play = "y"                  # Users response when they are prompt if they would like to continue to play.
-games = int(0)              # Incremental counter to keep a count for the number of games the user has played.
-die1 = 0                    # Stores the random value from 1 to 6 for die 1.
-die2 = 0                    # Stores the random value from 1 to 6 for die 2
-die3 = 0                    # Stores the random value from 1 to 6 for die 3
-die4 = 0                    # Stores the random value from 1 to 6 for die 4
-die5 = 0                    # Stores the random value from 1 to 6 for die 5
+play = "y"                  # Users response when they are prompted if they would like to continue to play.
+games = 0                   # Incremental counter to keep a count for the number of games the user has played.
+die1 = die2 = die3 = die4 = die5 = 0
 ThreeCorrect = 0            # Incremental counter to keep track of consecutive correct guesses 
 ThreeIncorrect = 0          # Incremental counter to keep track of consecutive incorrect guesses 
 index = 1                   # Incremental counter used to display the numbers from 1-6 in the game summary 
-score = int(0)              # Correct answer for the roll
-userGuess = int(0)          # Stores the user's guess for the roll 
-correctGuesses = int(0)     # Incremental counter for the number of correct guesses
-incorrectGuesses = int(0)   # Incremental counter for the number of incorrect guesses
+score = 0                   # Correct answer for the roll
+userGuess = 0               # Stores the user's guess for the roll 
+correctGuesses = 0          # Incremental counter for the number of correct guesses
+incorrectGuesses = 0        # Incremental counter for the number of incorrect guesses
 die_count = [0,0,0,0,0,0,0] # List to store the number of times each number has been rolled
 
+# Function to display dice faces in text format
+def display_dice_faces(dice_values):
+    faces = {1: "-----\n|   |\n| o |\n|   |\n-----",
+             2: "-----\n|o  |\n|   |\n|  o|\n-----",
+             3: "-----\n|o  |\n| o |\n|  o|\n-----",
+             4: "-----\n|o o|\n|   |\n|o o|\n-----",
+             5: "-----\n|o o|\n| o |\n|o o|\n-----",
+             6: "-----\n|o o|\n|o o|\n|o o|\n-----"}
 
+    print("Dice Faces:")
+    for die in dice_values:
+        print(f"\nDie {die}:")
+        print(faces[die])
+
+# Function to display dice numbers
+def display_dice_numbers(dice_values):
+    print("Dice Numbers:")
+    for die in dice_values:
+        print(f"Die {die}: {die}")
 
 print("Petals Around the Rose")
 print("----------------------")
@@ -34,31 +46,29 @@ print("working out the secret and guess correctly three times in a row, you")
 print("become a Potentate of the Rose.")
 print()
 
+# Get the difficulty level from the user
+difficulty = input("Choose difficulty level [easy/hard]: ").strip().lower()
+while difficulty not in ['easy', 'hard']:
+    print("Invalid choice. Please enter 'easy' or 'hard'.")
+    difficulty = input("Choose difficulty level [easy/hard]: ").strip().lower()
 
 # The loop asks whether the user wants to play the game and continues to loop until the user enters 'y' or 'n'.
-while validInput== "no": 
-    
+while validInput == "no":
     play = input("Would you like to play Petals Around the Rose [y|n]? ")
 
     if play == "y":
-           
-        # validInput is set to yes once the user has entered a valid input in order to terminate the loop.
-        validInput = "yes" 
- 
+        validInput = "yes"
     elif play == "n":
         print()
         print()
         print("No worries... another time perhaps... :)")
-        validInput= "yes"
-
+        validInput = "yes"
     else:
         print("Please enter either 'y' or 'n'.")
         print()
 
-
 # The loop continues until the user enters 'n' (i.e wants to stop rolling the dice)
-while (play == 'y'): 
-
+while play == 'y':
     # The dice are assigned a randomly generated number.
     die1 = random.randint(1,6)
     die2 = random.randint(1,6)
@@ -73,16 +83,19 @@ while (play == 'y'):
     die_count[die4] = die_count[die4] + 1
     die_count[die5] = die_count[die5] + 1
 
-    # The dice are displayed using the display_dice function.
-    dice.display_dice(die1,die2,die3,die4,die5) 
-    
+    # Display dice based on difficulty level
+    if difficulty == 'easy':
+        display_dice_faces([die1, die2, die3, die4, die5])
+    else:
+        display_dice_numbers([die1, die2, die3, die4, die5])
+
     userGuess = int(input("Please enter your guess for the roll: "))
 
     # The variable score is set to zero for each new game.
-    score = 0 
-    games = games + 1
+    score = 0
+    games += 1
 
-    # The following if-elif statements calculate the correct score for each game.
+ # The following if-elif statements calculate the correct score for each game.
     # If 3 is rolled, 2 is added to the score and if a 5 is rolled, 4 is added to the score.
     if die1 == 3:
         score = score + 2
@@ -109,7 +122,7 @@ while (play == 'y'):
     elif die5 == 5:
         score = score + 4
 
-    # These if-else statements determine whether the userGuess is correct and display the message accordingly.
+     # These if-else statements determine whether the userGuess is correct and display the message accordingly.
     if userGuess == score: 
         print()
         print("Well Done! You guessed it!")
@@ -184,28 +197,14 @@ while (play == 'y'):
             print()
             print("Face  Frequency")
             
-            # The While loop displays the number from 1 to 6. 
-            while index < len(die_count):
-                
-                print("  ",index, end = "  ") 
-
-                # The for loop repeats and displays a '*' for the number of time each die has been rolled.
-                for number in range(die_count[index]):
-
-                    print("*", end = "")
-
-                print()
-                index = index + 1
-
- 
+            # Display the frequency of each dice face
+            for i in range(1, len(die_count)):
+                print(f"  {i}", end="  ")
+                print("*" * die_count[i])
             print()
             print("Thanks for playing!")
-            # As the user entered a valid input, validInput = "y" to terminate the loop. 
             validInput = "y"
-
         else:
             print("Please enter either 'y' or 'n'.")
             print()
-            # validInput ="n" as the user didn't enter 'y' or 'n' 
             validInput = "n"
-            
